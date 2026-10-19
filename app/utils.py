@@ -90,14 +90,16 @@ def validate_image(image_file: Any) -> Tuple[bool, Optional[Image.Image], Option
         return False, None, "No image file provided."
 
     try:
-        image = Image.open(image_file)
-        # Verify file structure
-        image.verify()
-        # Reset stream position after verify()
         if hasattr(image_file, "seek"):
             image_file.seek(0)
-        # Re-open and convert to RGB
-        rgb_image = Image.open(image_file).convert("RGB")
+
+        image = Image.open(image_file)
+        rgb_image = image.convert("RGB")
+        rgb_image.load()  # Force decode all pixel data into memory
+
+        if hasattr(image_file, "seek"):
+            image_file.seek(0)
+
         return True, rgb_image, None
     except Exception:
         return False, None, "Unable to read the uploaded image. Please ensure it is a valid JPEG or PNG file."

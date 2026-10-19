@@ -91,8 +91,10 @@ else:
         if not is_valid:
             st.error(err_msg)
         else:
-            # Display the uploaded image
-            st.image(image, caption="Uploaded Image", use_container_width=True)
+            # Display the uploaded image directly from uploaded file buffer
+            if hasattr(uploaded_file, "seek"):
+                uploaded_file.seek(0)
+            st.image(uploaded_file, caption="Uploaded Image", use_container_width=True)
             st.write("")
             st.write("Classifying...")
 
