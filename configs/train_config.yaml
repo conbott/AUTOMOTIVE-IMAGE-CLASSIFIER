@@ -1,0 +1,32 @@
+# Automotive Image Classifier Training Configuration
+seed: 42
+
+data:
+  data_dir: "data/processed"
+  train_dir: "data/processed/train"
+  val_dir: "data/processed/val"
+  image_size: [224, 224]
+  batch_size: 32
+
+model:
+  architecture: "EfficientNetB0"
+  num_classes: 196
+  dropout_rate: 0.2
+
+training:
+  initial_epochs: 10
+  fine_tune_epochs: 10
+  initial_lr: 0.001
+  fine_tune_lr: 0.00001
+  early_stopping_patience: 3
+  monitor_metric: "val_loss"
+  checkpoint_metric: "val_accuracy"
+
+output:
+  artifacts_dir: "artifacts/runs"
+  serving_model_path: "models/car_classifier.keras"
+  classes_path: "models/classes.txt"
+
+mlflow:
+  tracking_uri: "mlruns"
+  experiment_name: "automotive-image-classifier"

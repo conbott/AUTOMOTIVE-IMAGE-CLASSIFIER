@@ -4,7 +4,8 @@ import scipy.io
 from sklearn.model_selection import train_test_split
 
 def prepare_data():
-    base_dir = r"c:\Users\con1k\Documents\PROJECTS\automotive-classification\data"
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    base_dir = os.path.join(project_root, "data")
     devkit_dir = os.path.join(base_dir, "car_devkit", "devkit")
     train_dir_raw = os.path.join(base_dir, "cars_train")
     

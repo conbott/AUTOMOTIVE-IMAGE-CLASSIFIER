@@ -1,0 +1,11 @@
+[
+  {
+    "run_id": "test_tracking_dry_run",
+    "decision": "REJECTED",
+    "baseline_macro_f1": 0.5698,
+    "candidate_macro_f1": 0.54,
+    "required_threshold": 0.5698,
+    "reason": "Candidate Macro F1 (0.5400) does not meet required threshold (0.5698)",
+    "timestamp": "2026-10-19T09:22:01.151278+00:00"
+  }
+]

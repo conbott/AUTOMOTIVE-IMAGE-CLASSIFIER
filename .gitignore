@@ -71,8 +71,15 @@ venv.bak/
 
 # Datasets and models
 data/
+artifacts/
+mlruns/
 *.pth
 *.pt
 *.onnx
 *.h5
 *.pb
+*.keras.bak
+*backup*.keras
+models/candidates/
+models/backups/
+models/.temp*
