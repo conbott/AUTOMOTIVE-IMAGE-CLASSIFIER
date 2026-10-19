@@ -31,5 +31,7 @@ jobs:
           python -c "from src.config import load_config; cfg = load_config('configs/train_config.yaml'); print('Config loaded successfully:', cfg['model']['architecture'])"
 
       - name: Run lightweight unit tests
+        env:
+          PYTHONPATH: .
         run: |
-          pytest tests/ -v --durations=10
+          python -m pytest tests/ -v --durations=10
