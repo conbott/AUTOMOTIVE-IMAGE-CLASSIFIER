@@ -1,18 +1,18 @@
 # Automotive Image Classifier (DLOps Workflow)
 
-An end-to-end, production-grade Deep Learning Operations (DLOps) workflow for 196-class fine-grained automotive image classification using TensorFlow, EfficientNetB0, MLflow, and Streamlit.
+An end-to-end Deep Learning Operations (DLOps) workflow for 196-class fine-grained automotive image classification using TensorFlow, EfficientNetB0, MLflow, and Streamlit.
 
 ---
 
 ## 1. Project Overview & Objectives
 
-The goal of this project is to transform an initial image classification prototype into a reproducible, traceable, and testable production system.
+The goal of this project is to transform an automotive image classification baseline into a reproducible, traceable, and testable end-to-end DLOps system.
 
 ### Key Highlights
 - **Fine-Grained Classification**: Classifies car images across 196 makes, models, and years from the Stanford Cars dataset.
 - **Configuration-Driven Architecture**: Centralized hyperparameter and environment settings via `configs/train_config.yaml`.
 - **Local Experiment Tracking**: Detailed run tracking (per-epoch losses, accuracy, macro metrics, confusion matrices) logged locally using MLflow.
-- **Quality Gates & Safe Model Promotion**: Candidate models are isolated under `artifacts/runs/<run_id>/` and can only be promoted to production serving if their validation Macro F1 meets or exceeds the verified baseline (`>= 0.5698`).
+- **Quality Gates & Safe Model Promotion**: Candidate models are isolated under `artifacts/runs/<run_id>/` and can only be promoted to active serving if their validation Macro F1 meets or exceeds the verified baseline (`>= 0.5698`).
 - **Rollback Protection & Auditability**: Atomic replacement (`os.replace`), pre-promotion shape/forward-pass validation, automatic timestamped backups, and SHA-256 audit logging.
 - **Interactive Serving App**: Streamlit web interface featuring single-pass softmax inference, dynamic model caching with file-modification tracking, collapsible verified metadata, and robust input validation.
 - **Continuous Integration**: Automated test suite with 35 tests running in under 12 seconds via GitHub Actions.
@@ -46,8 +46,8 @@ flowchart TD
         PROMOTE -->|F1 >= 0.5698| ATOMIC["Atomic Replacement & Backup"]
     end
 
-    subgraph Serving["5. Production Serving"]
-        ATOMIC --> PROD["models/car_classifier.keras"]
+    subgraph Serving["5. Model Serving"]
+        ATOMIC --> PROD["models/car_classifier.keras (Serving Model)"]
         PROD --> APP["app/main.py (Streamlit UI)"]
         APP --> INFER["Single-Pass Softmax & Top-3 Predictions"]
     end
@@ -72,7 +72,7 @@ automotive-classification/
 │   ├── cars_train/                    # Raw training images
 │   └── processed/                     # Split dataset (train: 6,515 images, val: 1,629 images)
 ├── models/
-│   ├── car_classifier.keras           # Production serving model (EfficientNetB0, SHA-256 verified)
+│   ├── car_classifier.keras           # Active serving model (EfficientNetB0, SHA-256 verified)
 │   ├── car_classifier_baseline_backup.keras # Protected baseline backup model
 │   ├── classes.txt                    # Sorted list of 196 car classes
 │   ├── class_mapping.json             # Index-to-class and class-to-index dictionary
@@ -123,7 +123,7 @@ The Stanford Cars dataset consists of 8,144 automotive images categorized into *
 
 ## 6. Baseline Benchmark Metrics
 
-The production baseline model (`models/car_classifier.keras`) was evaluated against the entire validation split (`data/processed/val/`, 1,629 images) using deterministic unbatched evaluation.
+The baseline model (`models/car_classifier.keras`) was evaluated against the entire validation split (`data/processed/val/`, 1,629 images) using deterministic unbatched evaluation.
 
 > [!NOTE]
 > These figures represent **baseline validation split metrics**, not held-out test or real-world production performance. The model is a functional transfer-learning baseline, not a state-of-the-art classifier.
@@ -223,7 +223,7 @@ Open your browser at `http://localhost:8501`.
 
 ## 8. Continuous Integration (GitHub Actions)
 
-A GitHub Actions workflow is defined in [`.github/workflows/ci.yml`](file:///.github/workflows/ci.yml).
+A GitHub Actions workflow is defined in [`.github/workflows/ci.yml`](https://github.com/conbott/AUTOMOTIVE-IMAGE-CLASSIFIER/blob/main/.github/workflows/ci.yml).
 - **Triggers**: Push and pull requests on `main` and `master`.
 - **Environment**: `ubuntu-latest`, Python `3.11`.
 - **Steps**:
