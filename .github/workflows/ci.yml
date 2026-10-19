@@ -28,7 +28,7 @@ jobs:
 
       - name: Validate configuration integrity
         run: |
-          python -c "from src.config import load_config; cfg = load_config('configs/train_config.yaml'); print('Config loaded successfully:', cfg['model']['name'])"
+          python -c "from src.config import load_config; cfg = load_config('configs/train_config.yaml'); print('Config loaded successfully:', cfg['model']['architecture'])"
 
       - name: Run lightweight unit tests
         run: |

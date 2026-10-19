@@ -156,7 +156,7 @@ pip install -r requirements.txt
 
 ### B. Validate Configuration
 ```powershell
-python -c "from src.config import load_config; cfg = load_config('configs/train_config.yaml'); print('Config loaded successfully. Model:', cfg['model']['name'])"
+python -c "from src.config import load_config; cfg = load_config('configs/train_config.yaml'); print('Config loaded successfully. Model:', cfg['model']['architecture'])"
 ```
 
 ### C. Run the Unit Test Suite
