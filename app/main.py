@@ -18,7 +18,8 @@ try:
         load_model_and_classes,
         validate_image,
         get_model_metadata,
-        get_file_mtime
+        get_file_mtime,
+        image_to_base64
     )
 except ModuleNotFoundError:
     from utils import (
@@ -29,7 +30,8 @@ except ModuleNotFoundError:
         load_model_and_classes,
         validate_image,
         get_model_metadata,
-        get_file_mtime
+        get_file_mtime,
+        image_to_base64
     )
 
 # Set page configuration
@@ -91,10 +93,15 @@ else:
         if not is_valid:
             st.error(err_msg)
         else:
-            # Display the uploaded image directly from uploaded file buffer
-            if hasattr(uploaded_file, "seek"):
-                uploaded_file.seek(0)
-            st.image(uploaded_file, caption="Uploaded Image", use_container_width=True)
+            # Display the uploaded image cleanly using embedded data URI to prevent cloud media router 404s
+            img_b64 = image_to_base64(image)
+            st.markdown(
+                f'<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 10px 0 20px 0;">'
+                f'<img src="{img_b64}" style="max-width: 100%; max-height: 420px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); object-fit: contain;" alt="Uploaded Image" />'
+                f'<span style="color: #888888; font-size: 0.85rem; margin-top: 6px;">Uploaded Image</span>'
+                f'</div>',
+                unsafe_allow_html=True,
+            )
             st.write("")
             st.write("Classifying...")
 

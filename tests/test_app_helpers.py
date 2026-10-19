@@ -11,8 +11,22 @@ from app.utils import (
     load_model_and_classes,
     validate_image,
     get_model_metadata,
-    get_file_mtime
+    get_file_mtime,
+    image_to_base64
 )
+
+def test_image_to_base64():
+    # Test valid image conversion and thumbnailing
+    img = Image.new("RGB", (1200, 900), color="blue")
+    uri = image_to_base64(img, max_size=(400, 400))
+    assert uri.startswith("data:image/jpeg;base64,")
+    assert len(uri) > len("data:image/jpeg;base64,")
+
+    # Test RGBA conversion
+    rgba_img = Image.new("RGBA", (100, 100), color=(0, 255, 0, 128))
+    rgba_uri = image_to_base64(rgba_img)
+    assert rgba_uri.startswith("data:image/jpeg;base64,")
+
 
 def test_preprocess_image():
     # Test with arbitrary size RGBA image

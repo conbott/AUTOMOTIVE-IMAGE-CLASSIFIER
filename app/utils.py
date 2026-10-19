@@ -1,4 +1,6 @@
 import os
+import io
+import base64
 import json
 from typing import List, Tuple, Optional, Dict, Any
 import numpy as np
@@ -8,6 +10,22 @@ import tensorflow as tf
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_MODEL_PATH = os.path.join(PROJECT_ROOT, "models", "car_classifier.keras")
 DEFAULT_CLASSES_PATH = os.path.join(PROJECT_ROOT, "models", "classes.txt")
+
+def image_to_base64(image: Image.Image, max_size: Tuple[int, int] = (800, 800)) -> str:
+    """
+    Converts a PIL Image into an inlined Base64 data URI (data:image/jpeg;base64,...).
+    Downsamples a copy if dimensions exceed max_size to maintain fast rendering.
+    Enables reliable HTML rendering across cloud proxies and VPNs without relying on MediaFileManager.
+    """
+    img_copy = image.copy()
+    if img_copy.mode != "RGB":
+        img_copy = img_copy.convert("RGB")
+    img_copy.thumbnail(max_size, Image.Resampling.LANCZOS)
+    buffered = io.BytesIO()
+    img_copy.save(buffered, format="JPEG", quality=85)
+    img_b64 = base64.b64encode(buffered.getvalue()).decode("utf-8")
+    return f"data:image/jpeg;base64,{img_b64}"
+
 
 def preprocess_image(image: Image.Image, target_size: Tuple[int, int] = (224, 224)) -> np.ndarray:
     """
